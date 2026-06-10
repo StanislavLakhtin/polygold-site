@@ -1,0 +1,35 @@
+services:
+  gold-site:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gold-site
+    restart: unless-stopped
+    networks:
+      - traefik_default
+    labels:
+      - "traefik.enable=true"
+
+      # --- роутер HTTP (редирект на HTTPS через entrypoint Traefik) ---
+      - "traefik.http.routers.gold-site-http.rule=Host(`polygold.prostore.business`) || Host(`www.polygold.prostore.business`)"
+      - "traefik.http.routers.gold-site-http.entrypoints=http"
+      - "traefik.http.routers.gold-site-http.middlewares=https-redirect"
+
+      # --- роутер HTTPS ---
+      - "traefik.http.routers.gold-site.rule=Host(`polygold.prostore.business`) || Host(`www.polygold.prostore.business`)"
+      - "traefik.http.routers.gold-site.entrypoints=https"
+      - "traefik.http.routers.gold-site.tls=true"
+      - "traefik.http.routers.gold-site.tls.certresolver=leresolver"
+
+      # --- middleware: www → non-www ---
+      - "traefik.http.middlewares.gold-www-redirect.redirectregex.regex=^https://www\\.polygold\\.prostore\\.business/(.*)"
+      - "traefik.http.middlewares.gold-www-redirect.redirectregex.replacement=https://polygold.prostore.business/$${1}"
+      - "traefik.http.middlewares.gold-www-redirect.redirectregex.permanent=true"
+      - "traefik.http.routers.gold-site.middlewares=gold-www-redirect"
+
+      # --- сервис ---
+      - "traefik.http.services.gold-site.loadbalancer.server.port=3000"
+
+networks:
+  traefik_default:
+    external: true
