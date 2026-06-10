@@ -5,51 +5,42 @@ interface LogoProps {
   size?: number
 }
 
-/**
- * Two concentric hexagonal rings split at the equator:
- * gold (top arches) + dark (bottom arches).
- *
- * Pointy-top hexagon, center (105,105), viewBox 210×210.
- *   outer ring : R_outer=90 → R_inner=71
- *   gap        : 4.5 px (background shows through between rings)
- *   inner ring : R_outer=66 → R_inner=47
- *   split      : y=105
- */
 export default function PolyGoldLogo({ className = '', size = 40 }: LogoProps) {
+  // Original viewBox aspect ratio: 187.94 × 170.567 ≈ 1.1:1
+  const height = Math.round(size * 170.567 / 187.94)
+
   return (
     <div className={`flex items-center gap-3 ${className}`}>
       <svg
         width={size}
-        height={size}
-        viewBox="0 0 210 210"
+        height={height}
+        viewBox="0 0 187.94 170.567"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
       >
-        {/* GOLD — outer ring, top arch */}
-        <path
-          d="M27,105 L27,60 L105,15 L183,60 L183,105
-             L166.5,105 L166.5,69.5 L105,34 L43.5,69.5 L43.5,105 Z"
-          fill="#F5A623"
-        />
-        {/* GOLD — inner ring, top arch */}
-        <path
-          d="M48,105 L48,72 L105,39 L162,72 L162,105
-             L146,105 L146,81.5 L105,58 L64,81.5 L64,105 Z"
-          fill="#F5A623"
-        />
-        {/* DARK — outer ring, bottom arch */}
-        <path
-          d="M183,105 L183,150 L105,195 L27,150 L27,105
-             L43.5,105 L43.5,140.5 L105,176 L166.5,140.5 L166.5,105 Z"
-          fill="#1C1600"
-        />
-        {/* DARK — inner ring, bottom arch */}
-        <path
-          d="M162,105 L162,138 L105,171 L48,138 L48,105
-             L64,105 L64,128.5 L105,152 L146,128.5 L146,105 Z"
-          fill="#1C1600"
-        />
+        <g transform="translate(0.5, -0.5)">
+          {/* Dark (black) — bottom/back layer */}
+          <path
+            d="M120.194,49.593 L145.776,93.902 L186.14,93.902 L141.877,170.567 L45.262,170.567
+               L1,93.902 L42.332,93.902 L65.928,134.772 L121.211,134.772 L138.153,105.429
+               L113.055,61.959 L92.621,61.959 L85.482,49.593 Z
+               M34.566,105.182 L20.789,105.182 L51.901,159.069 L135.239,159.069
+               L166.351,105.182 L152.574,105.182 L152.431,105.429 L152.507,105.561
+               L152.355,105.561 L128.35,147.138 L58.789,147.138 Z"
+            fill="#111111"
+          />
+          {/* Gold (orange) — top/front layer */}
+          <path
+            d="M68.246,121.473 L42.664,77.165 L2.301,77.165 L46.563,0.5 L143.178,0.5
+               L187.44,77.165 L146.108,77.165 L122.512,36.294 L67.229,36.294 L50.287,65.638
+               L75.385,109.108 L95.819,109.108 L102.958,121.473 Z
+               M153.874,65.885 L167.652,65.885 L136.54,11.998 L53.201,11.998
+               L22.089,65.885 L35.866,65.885 L36.009,65.638 L35.933,65.506
+               L36.085,65.506 L60.09,23.929 L129.651,23.929 Z"
+            fill="#FF9A00"
+          />
+        </g>
       </svg>
 
       <div className="flex items-baseline leading-none">
